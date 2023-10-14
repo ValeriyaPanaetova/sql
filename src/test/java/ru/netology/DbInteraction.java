@@ -1,5 +1,7 @@
 package ru.netology;
 
+
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.netology.mode.DbUtils;
@@ -12,7 +14,16 @@ import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DbInteraction {
-    User user = new User("vasya", "qwerty123");
+    @AfterAll
+    static void cleanData() {
+        DbUtils.cleanData();
+    }
+
+
+    User user = new User();
+
+
+
 
     @Test
     @DisplayName("Логин с валидными данными")
@@ -24,3 +35,4 @@ public class DbInteraction {
         assertEquals("Личный кабинет", dashboardPage.getHeading());
     }
 }
+
