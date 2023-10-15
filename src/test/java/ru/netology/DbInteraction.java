@@ -2,37 +2,31 @@ package ru.netology;
 
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.netology.mode.DataHelper;
 import ru.netology.mode.DbUtils;
-import ru.netology.mode.User;
-import ru.netology.page.DashboardPage;
 import ru.netology.page.LoginPage;
-import ru.netology.page.VerificationPage;
+
+import java.sql.SQLException;
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.netology.mode.DbUtils.cleanDatabase;
 
 public class DbInteraction {
+
     @AfterAll
-    static void cleanData() {
-        DbUtils.cleanData();
+    static void teardown() {
+        cleanDatabase();
     }
-
-
-    User user = new User();
-
-
-
 
     @Test
-    @DisplayName("Логин с валидными данными")
-    void loginWithValidData() {
+    void shouldSuccessFullLogin() throws SQLException {
         open("http://localhost:9999");
-        LoginPage loginPage = new LoginPage();
-        VerificationPage verificationPage = loginPage.validLogin(user);
-        DashboardPage dashboardPage = verificationPage.validVerify(DbUtils.getVerificationCode());
-        assertEquals("Личный кабинет", dashboardPage.getHeading());
+        var loginPage = new LoginPage();
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        verificationPage.verificationPageVisiblity();
+        var verificationCode = DbUtils.getVerifacationCode();
+        verificationPage.validVerify(verificationCode.getCode());
     }
 }
-

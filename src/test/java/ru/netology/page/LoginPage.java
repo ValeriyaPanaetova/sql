@@ -1,7 +1,7 @@
 package ru.netology.page;
 
 import com.codeborne.selenide.SelenideElement;
-import ru.netology.mode.User;
+import ru.netology.mode.DataHelper;
 
 import static com.codeborne.selenide.Selenide.$;
 
@@ -10,9 +10,9 @@ public class LoginPage {
     private SelenideElement passwordField = $("[data-test-id=password] input");
     private SelenideElement loginButton = $("[data-test-id=action-login]");
 
-    public VerificationPage validLogin(User user) {
-        loginField.setValue(user.getLogin());
-        passwordField.setValue(user.getPassword());
+    public VerificationPage validLogin(DataHelper.AuthInfo info) {
+        loginField.setValue(info.getLogin());
+        passwordField.setValue(info.getPassword());
         loginButton.click();
         return new VerificationPage();
     }
